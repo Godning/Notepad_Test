@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
 '''
-Created on 2015Äê10ÔÂ25ÈÕ
+Created on 2015.10.25
 
 @author: luke
 '''
