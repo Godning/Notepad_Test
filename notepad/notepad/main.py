@@ -18,7 +18,7 @@ def author():
 def copyright():
     showinfo("Copyright", "Belong to Godning")
     
-def openfile():
+def openfile(event=None):
     global filename
     #file object
     fileobj = askopenfile(defaultextension='.py')
@@ -32,13 +32,13 @@ def openfile():
         textPad.insert(1.0, f.read())
         f.close()
         
-def newfile():
+def newfile(event=None):
     global filename
     root.title("New File")
     filename=None
     textPad.delete(1.0,END)
     
-def save():
+def save(event=None):
     global filename
     try:
         f=open(filename,'w')
@@ -48,35 +48,38 @@ def save():
     except:
         saveas()
 
-def saveas():
+def saveas(event=None):
     f = asksaveasfile(initialfile = 'newfile.py',defaultextension='.py')
     global filename
-    filename = f.name
-    file = open(filename,'w')
-    msg = textPad.get(1.0,END)
-    file.write(msg)
-    file.close()
-    root.title('File: '+os.path.basename(filename))
+    try:
+        filename = f.name
+        file = open(filename,'w')
+        msg = textPad.get(1.0,END)
+        file.write(msg)
+        file.close()
+        root.title('File: '+os.path.basename(filename))
+    except:
+        pass
     
-def cut():
+def cut(event=None):
     textPad.event_generate('<<Cut>>')
 
-def copy():
+def copy(event=None):
     textPad.event_generate('<<Copy>>')
     
-def paste():
+def paste(event=None):
     textPad.event_generate('<<Paste>>')
     
-def redo():
+def redo(event=None):
     textPad.event_generate('<<Redo>>')
     
-def undo():
+def undo(event=None):
     textPad.event_generate('<<Undo>>')
     
-def selectall():
+def selectall(event=None):
     textPad.tag_add('sel', '1.0',END)
     
-def search():
+def search(event=None):
     topsearch=Toplevel(root)
     topsearch.geometry('300x100+200+250')
     label = Label(topsearch,text='Find')
@@ -92,6 +95,7 @@ def search():
             textPad.tag_add(SEL,where ,pastit)  
             textPad.mark_set(INSERT, pastit)
             textPad.see(INSERT)
+            textPad.focus()
 #         else:
 #             showinfo("None", "Nothing could be found!")
     button=Button(topsearch,text="search",command=genSearch)
@@ -105,6 +109,21 @@ root.geometry("500x500+100+100")
 # Create Menu
 menubar = Menu(root)
 root.config(menu=menubar)
+#绑定快捷键
+root.bind('<Control-n>', newfile)
+root.bind('<Control-o>', openfile)
+root.bind('<Control-s>', save)
+root.bind('<Control-Shift-s>', saveas)
+
+root.bind('<Control-z>', undo)
+root.bind('<Control-y>', redo)
+
+root.bind('<Control-x>', cut)
+root.bind('<Control-x>', copy)
+root.bind('<Control-v>', paste)
+
+root.bind('<Control-f>', search)
+root.bind('<Control-a>', selectall)
 
 filemenu = Menu(menubar)
 filemenu.add_command(label='new', accelerator='Ctrl + N',command=newfile)
