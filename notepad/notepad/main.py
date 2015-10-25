@@ -85,15 +85,18 @@ def search():
     entry.grid(row=0,column=1,padx=5)
     def genSearch():
         msg = entry.get()         
-        where=textPad.search(msg, '1.0',END)
-        pastit=where + ('+%dc' % len(msg))
-        textPad.tag_add(SEL,where ,pastit)  
-        textPad.mark_set(INSERT, pastit)
-        textPad.see(INSERT)
-        textPad.focus()
+        where=textPad.search(msg, INSERT,END)
+        if where:
+            pastit=where + ('+%dc' % len(msg))
+            textPad.tag_remove(SEL, '1.0', INSERT)
+            textPad.tag_add(SEL,where ,pastit)  
+            textPad.mark_set(INSERT, pastit)
+            textPad.see(INSERT)
+#         else:
+#             showinfo("None", "Nothing could be found!")
     button=Button(topsearch,text="search",command=genSearch)
     button.grid(row=0,column=2) 
-       
+    
 root = Tk()
 root.title('Notepad')
 # x not *
@@ -135,16 +138,17 @@ shortButton = Button(toorbar, text='save',command=save)
 shortButton.pack(side=LEFT)
 toorbar.pack(expand=NO, fill=X)
 
-# Statusbar
-status = Label(root, text='Ln20', bd=1, relief=SUNKEN, anchor=W)
-status.pack(side=BOTTOM, fill=X)
-
 # Linenumber&text
 linelabel = Label(root, width=2, bg='antique white')
 linelabel.pack(side=LEFT, fill=Y)
 
 textPad = Text(root, undo=True)
 textPad.pack(expand=YES, fill=BOTH)
+
+# Statusbar
+status = Label(root, text='Notepad v1.0', bd=1, relief=SUNKEN, anchor=W)
+status.pack(side=BOTTOM, fill=X)
+
 # scrollbar
 scroll = Scrollbar(textPad)
 textPad.config(yscrollcommand=scroll.set)
